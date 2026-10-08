@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@layer base {
+	html {
+		overflow-x: hidden;
+	}
+
+	body {
+		min-width: 320px;
+		margin: 0;
+	}
+
+	button,
+	a,
+	input,
+	select {
+		touch-action: manipulation;
+	}
+}
