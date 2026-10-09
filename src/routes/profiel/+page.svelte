@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import TeacherLink from "$lib/components/TeacherLink.svelte";
+    import LoadingSkeleton from "$lib/components/LoadingSkeleton.svelte";
 
     type Role = "STUDENT" | "CURSIST" | "DOCENT";
 
@@ -133,11 +134,9 @@
 <div class="min-h-[calc(100vh-4rem)] w-full bg-slate-50 px-4 py-10">
     <div class="mx-auto max-w-2xl">
         {#if loading}
-            <p class="py-16 text-center text-sm text-slate-500">
-                Profiel laden...
-            </p>
+            <LoadingSkeleton variant="profile" />
         {:else if error}
-            <div class="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div role="alert" class="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
                 {error}
             </div>
         {:else if profile && role}

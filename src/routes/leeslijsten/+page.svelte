@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import LoadingSkeleton from "$lib/components/LoadingSkeleton.svelte";
 
     const API = "http://localhost:3000";
 
@@ -210,7 +211,9 @@
             </div>
 
             {#if students.length > 0}
+                <label for="student-search" class="sr-only">Zoek studenten</label>
                 <input
+                    id="student-search"
                     type="search"
                     bind:value={search}
                     placeholder="Zoek op naam of e-mail"
@@ -220,21 +223,19 @@
         </div>
 
         {#if actionError}
-            <div class="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div role="alert" class="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
                 {actionError}
             </div>
         {/if}
 
         {#if successMessage}
-            <div class="mb-4 rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700">
+            <div role="status" aria-live="polite" class="mb-4 rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700">
                 {successMessage}
             </div>
         {/if}
 
         {#if loading}
-            <p class="py-12 text-center text-sm text-slate-500">
-                Leeslijsten laden...
-            </p>
+            <LoadingSkeleton variant="list" />
         {:else if forbidden}
             <div class="rounded-xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm">
                 <p class="text-lg font-semibold text-slate-900">
@@ -253,7 +254,7 @@
                 </a>
             </div>
         {:else if error}
-            <div class="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div role="alert" class="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
                 {error}
             </div>
         {:else if students.length === 0}

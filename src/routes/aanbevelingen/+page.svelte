@@ -3,6 +3,7 @@
     import Button from "$lib/components/Button.svelte";
     import BookCard from "$lib/components/BookCard.svelte";
     import Pagination from "$lib/components/Pagination.svelte";
+    import LoadingSkeleton from "$lib/components/LoadingSkeleton.svelte";
 
     const API = "http://localhost:3000";
     const DRAFT_KEY = "readingProfileDraft";
@@ -56,7 +57,7 @@
     let form = $state<Form>(emptyForm());
     let savedForm = $state<Form>(emptyForm());
 
-    let status = $state<"loading" | "loggedOut" | "ready">("loading");
+    let status = $state<"loading" | "loggedOut" | "error" | "ready">("loading");
     let token: string | null = null;
     let saving = $state(false);
     let restored = $state(false);
@@ -435,6 +436,17 @@
                 }
             });
 
+            if (profileResponse.status === 401) {
+                sessionExpired();
+                return;
+            }
+
+            if (!profileResponse.ok) {
+                error = `De backend gaf een foutmelding (${profileResponse.status}).`;
+                status = "error";
+                return;
+            }
+
             if (profileResponse.ok) {
                 const profile = await profileResponse.json();
 
@@ -443,8 +455,11 @@
                     return;
                 }
             }
-        } catch (error) {
-            console.error("Toegangscontrole mislukt:", error);
+        } catch (err) {
+            console.error("Toegangscontrole mislukt:", err);
+            error = "Kan geen verbinding maken met de backend. Controleer of de server draait.";
+            status = "error";
+            return;
         }
 
         await loadSavedBookIds();
@@ -505,18 +520,22 @@
 </svelte:head>
 
 <div class="mx-auto max-w-7xl px-6 py-10">
-    <h2 class="text-2xl font-bold tracking-tight text-slate-900">
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900">
         Aanbevelingen
-    </h2>
+    </h1>
 
     {#if status === "loading"}
-        <p class="mt-6 text-slate-500">Laden...</p>
+        <LoadingSkeleton variant="recommendations" />
     {:else if status === "loggedOut"}
         <p class="mt-6 text-slate-600">
             Log in om je leesprofiel in te vullen.
             <a href="/login" class="font-medium text-indigo-600 hover:underline">
                 Inloggen
             </a>
+        </p>
+    {:else if status === "error"}
+        <p role="alert" class="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
         </p>
     {:else}
         <section class="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -542,7 +561,7 @@
             </div>
 
             {#if profileCollapsed}
-                <p class="mt-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800">
+                <p role="status" aria-live="polite" class="mt-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800">
                     Je opgeslagen leesprofiel is ingeklapt.
                 </p>
             {:else}
@@ -551,14 +570,14 @@
                 </p>
 
                 {#if restored}
-                    <p class="mt-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    <p role="status" aria-live="polite" class="mt-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
                         Je hebt niet-opgeslagen wijzigingen teruggezet.
                     </p>
                 {/if}
 
                 <div class="mt-6 space-y-8">
-                    <div>
-                        <p class="font-medium text-slate-800">
+                    <div role="group" aria-labelledby="reading-level-label">
+                        <p id="reading-level-label" class="font-medium text-slate-800">
                             Wat is je taalniveau?
                             <span class="text-red-600">*</span>
                         </p>
@@ -581,8 +600,8 @@
                         </div>
                     </div>
 
-                    <div>
-                        <p class="font-medium text-slate-800">
+                    <div role="group" aria-labelledby="topic-label">
+                        <p id="topic-label" class="font-medium text-slate-800">
                             Over welk thema wil je lezen?
                             <span class="text-red-600">*</span>
                         </p>
@@ -605,8 +624,8 @@
                         </div>
                     </div>
 
-                    <div>
-                        <p class="font-medium text-slate-800">
+                    <div role="group" aria-labelledby="length-label">
+                        <p id="length-label" class="font-medium text-slate-800">
                             Hoe lang mag het zijn?
                             <span class="text-xs font-normal text-slate-400">(optioneel)</span>
                         </p>
@@ -630,8 +649,8 @@
                         </div>
                     </div>
 
-                    <div>
-                        <p class="font-medium text-slate-800">
+                    <div role="group" aria-labelledby="goal-label">
+                        <p id="goal-label" class="font-medium text-slate-800">
                             Wat is je doel met lezen?
                             <span class="text-xs font-normal text-slate-400">(optioneel)</span>
                         </p>
@@ -657,7 +676,7 @@
                 </div>
 
                 {#if error}
-                    <p class="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <p role="alert" class="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
                         {error}
                     </p>
                 {/if}
@@ -685,7 +704,7 @@
                     {/if}
 
                     {#if missing.length > 0}
-                        <span class="text-sm text-slate-500">
+                        <span role="status" class="text-sm text-slate-600">
                             Nog invullen: {missing.join(", ")}
                         </span>
                     {/if}

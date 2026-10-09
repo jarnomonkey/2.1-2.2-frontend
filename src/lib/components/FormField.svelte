@@ -9,7 +9,8 @@
         required = false,
         disabled = false,
         minlength,
-        hint = ""
+        hint = "",
+        error = ""
     } = $props<{
         id: string;
         label: string;
@@ -21,6 +22,7 @@
         disabled?: boolean;
         minlength?: number;
         hint?: string;
+        error?: string;
     }>();
 </script>
 
@@ -38,10 +40,18 @@
         {required}
         {disabled}
         {minlength}
+        aria-invalid={error ? "true" : undefined}
+        aria-describedby={[hint ? `${id}-hint` : "", error ? `${id}-error` : ""].filter(Boolean).join(" ") || undefined}
         class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none transition focus:border-black focus:bg-white focus:ring-2 focus:ring-gray-200 disabled:cursor-not-allowed disabled:opacity-60"
     />
 
     {#if hint}
-        <p class="mt-1.5 text-xs text-gray-400">{hint}</p>
+        <p id={`${id}-hint`} class="mt-1.5 text-xs text-gray-600">{hint}</p>
+    {/if}
+
+    {#if error}
+        <p id={`${id}-error`} role="alert" class="mt-1.5 text-sm text-red-700">
+            {error}
+        </p>
     {/if}
 </div>

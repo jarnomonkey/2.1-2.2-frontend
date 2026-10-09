@@ -38,7 +38,7 @@
 
 <article class="w-full min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5">
     <div class="mb-4 flex h-40 items-center justify-center rounded-lg bg-indigo-100">
-        <span class="text-5xl">📚</span>
+        <span aria-hidden="true" class="text-5xl">📚</span>
     </div>
 
     <h2 class="break-words text-xl font-bold text-slate-900">{title}</h2>

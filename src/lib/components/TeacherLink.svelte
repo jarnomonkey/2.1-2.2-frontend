@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import LoadingSkeleton from "$lib/components/LoadingSkeleton.svelte";
 
     type Teacher = {
         _id?: string;
@@ -180,7 +181,7 @@
     </p>
 
     {#if loading}
-        <p class="mt-6 text-sm text-slate-500">Docenten laden...</p>
+        <LoadingSkeleton variant="teacher" />
     {:else}
         {#if currentTeacher}
             <div class="mt-6 rounded-xl bg-indigo-50 p-4">
@@ -236,13 +237,13 @@
     {/if}
 
     {#if error}
-        <p class="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-600">
+        <p role="alert" class="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">
             {error}
         </p>
     {/if}
 
     {#if success}
-        <p class="mt-4 rounded-xl bg-green-50 p-3 text-sm text-green-700">
+        <p role="status" aria-live="polite" class="mt-4 rounded-xl bg-green-50 p-3 text-sm text-green-700">
             {success}
         </p>
     {/if}

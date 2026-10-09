@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import LoadingSkeleton from "$lib/components/LoadingSkeleton.svelte";
 
     type Book = {
         _id: string;
@@ -154,9 +155,7 @@
     </div>
 
     {#if loading}
-        <p class="px-5 py-8 text-center text-sm text-slate-500">
-            Leeslijst laden...
-        </p>
+        <LoadingSkeleton variant="list" />
     {:else if needsLogin}
         <p class="px-5 py-8 text-center text-sm text-slate-500">
             Log in om je leeslijst te zien.
@@ -168,7 +167,7 @@
             </a>
         </p>
     {:else if error}
-        <div class="m-5 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
+        <div role="alert" class="m-5 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
         </div>
     {:else if items.length === 0}
@@ -183,7 +182,7 @@
         </p>
     {:else}
         {#if actionError}
-            <div class="m-5 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div role="alert" class="m-5 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
                 {actionError}
             </div>
         {/if}
@@ -256,6 +255,7 @@
                         title="Verwijderen"
                     >
                         <svg
+                            aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             fill="none"

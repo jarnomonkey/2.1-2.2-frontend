@@ -33,6 +33,7 @@
 
 <div class="min-h-[calc(100vh-4rem)] w-full bg-slate-50 p-6">
     <div class="[&>div]:!max-w-none">
+        <h1 class="sr-only">Mijn leeslijst</h1>
         <ReadingList />
     </div>
 </div>

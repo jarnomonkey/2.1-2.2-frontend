@@ -407,19 +407,19 @@
             <section class="min-w-0">
 
         {#if error}
-            <div class="mt-6 rounded-2xl bg-red-50 p-5 text-center text-red-600">
+            <div role="alert" class="mt-6 rounded-2xl bg-red-50 p-5 text-center text-red-700">
                 {error}
             </div>
         {/if}
 
         {#if assignmentMessage}
-            <div class="mt-6 rounded-2xl bg-green-50 p-5 text-green-700">
+            <div role="status" aria-live="polite" class="mt-6 rounded-2xl bg-green-50 p-5 text-green-700">
                 {assignmentMessage}
             </div>
         {/if}
 
         {#if assignmentError}
-            <div class="mt-6 rounded-2xl bg-red-50 p-5 text-red-600">
+            <div role="alert" class="mt-6 rounded-2xl bg-red-50 p-5 text-red-700">
                 {assignmentError}
             </div>
         {/if}

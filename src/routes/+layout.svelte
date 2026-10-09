@@ -89,6 +89,8 @@
     }
 </script>
 
+<a class="skip-link" href="#main-content">Ga naar hoofdinhoud</a>
+
 {#if !["/login", "/register"].includes(page.url.pathname)}
     <header class="border-b border-slate-200 bg-white">
         <div class="mx-auto flex min-h-16 max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 md:flex-nowrap md:py-0">
@@ -99,15 +101,16 @@
             class="flex items-center gap-3"
         >
             <div
+                aria-hidden="true"
                 class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-xl text-white shadow-sm"
             >
                 📚
             </div>
 
             <div>
-                <h1 class="text-lg font-bold tracking-tight text-slate-900">
+                <span class="text-lg font-bold tracking-tight text-slate-900">
                     LeesApp
-                </h1>
+                </span>
 
                 <p class="text-xs text-slate-500">
                     Ontdek jouw volgende boek
@@ -116,7 +119,7 @@
         </a>
 
         <!-- Navigatie -->
-        <nav class="hidden items-center gap-1 md:flex">
+        <nav aria-label="Hoofdnavigatie" class="hidden items-center gap-1 md:flex">
 
             <a
                 href="/"
@@ -175,6 +178,7 @@
             type="button"
             aria-label={mobileMenuOpen ? "Menu sluiten" : "Menu openen"}
             aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
             onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
             class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 text-xl text-slate-700 hover:bg-slate-100 md:hidden"
         >
@@ -195,6 +199,7 @@
                         onclick={closeMobileMenu}
                     >
                         <div
+                            aria-hidden="true"
                             class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 font-semibold text-indigo-700"
                         >
                             {initial}
@@ -233,7 +238,7 @@
         </div>
 
         {#if mobileMenuOpen}
-            <nav class="border-t border-slate-100 px-4 pb-4 pt-3 md:hidden sm:px-6">
+            <nav id="mobile-navigation" aria-label="Mobiele navigatie" class="border-t border-slate-100 px-4 pb-4 pt-3 md:hidden sm:px-6">
                 <div class="grid gap-1">
                     <a href="/" onclick={closeMobileMenu} class="rounded-lg px-3 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100">Home</a>
                     {#if user?.role !== "DOCENT"}
@@ -253,6 +258,6 @@
     </header>
 {/if}
 
-<main>
+<main id="main-content">
     {@render children()}
 </main>

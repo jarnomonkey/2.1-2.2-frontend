@@ -47,7 +47,7 @@
 </script>
 
 {#if totalPages > 1}
-    <div class="mt-8 flex flex-wrap items-center justify-center gap-2 px-1">
+    <nav aria-label="Paginering" class="mt-8 flex flex-wrap items-center justify-center gap-2 px-1">
         <button
             type="button"
             onclick={() => goTo(currentPage - 1)}
@@ -63,6 +63,8 @@
             {:else}
                 <button
                     type="button"
+                    aria-label={`Ga naar pagina ${item}`}
+                    aria-current={currentPage === item ? "page" : undefined}
                     onclick={() => goTo(item)}
                     class={`h-9 w-9 rounded-lg text-sm font-medium transition ${
                         currentPage === item
@@ -83,7 +85,7 @@
         >
             Volgende →
         </button>
-    </div>
+    </nav>
 
     <p class="mt-3 text-center text-sm text-gray-500">
         Pagina {currentPage} van {totalPages}
