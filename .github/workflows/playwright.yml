@@ -45,7 +45,7 @@ jobs:
           path: backend
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 20
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers
@@ -65,7 +65,16 @@ jobs:
           nohup npm run start > "$RUNNER_TEMP/backend.log" 2>&1 &
         working-directory: backend
       - name: Wait for backend API
-        run: curl --fail --retry 20 --retry-delay 2 http://localhost:3000/docs
+        run: |
+          for attempt in {1..20}; do
+            if curl --fail --silent http://localhost:3000/docs > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Backend log:"
+          cat "$RUNNER_TEMP/backend.log"
+          exit 1
       - name: Run Playwright tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
