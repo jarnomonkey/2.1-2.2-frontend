@@ -576,7 +576,7 @@
                 {/if}
 
                 <div class="mt-6 space-y-8">
-                    <div role="group" aria-labelledby="reading-level-label">
+                    <div role="group" aria-label="Wat is je taalniveau">
                         <p id="reading-level-label" class="font-medium text-slate-800">
                             Wat is je taalniveau?
                             <span class="text-red-600">*</span>
@@ -600,7 +600,7 @@
                         </div>
                     </div>
 
-                    <div role="group" aria-labelledby="topic-label">
+                    <div role="group" aria-label="Over welk thema wil je lezen">
                         <p id="topic-label" class="font-medium text-slate-800">
                             Over welk thema wil je lezen?
                             <span class="text-red-600">*</span>

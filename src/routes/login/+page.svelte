@@ -76,7 +76,7 @@
             <form
                 onsubmit={(event) => {
                     event.preventDefault();
-                    login();
+                    void login();
                 }}
                 class="space-y-4"
             >
@@ -114,18 +114,18 @@
                 {/if}
 
                 <!-- Inloggen -->
-                <Button
-                    type="submit"
+                <button
+                    type="button"
                     disabled={loading}
-                    fullWidth
-                    class="py-3.5"
+                    onclick={() => login()}
+                    class="w-full rounded-xl bg-black px-6 py-3.5 font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {#if loading}
                         Inloggen...
                     {:else}
                         Inloggen
                     {/if}
-                </Button>
+                </button>
 
             </form>
 
