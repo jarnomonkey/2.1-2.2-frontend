@@ -5,7 +5,10 @@
     onMount(async () => {
         const token = localStorage.getItem("access_token");
 
-        if (!token) return;
+        if (!token) {
+            window.location.href = "/login";
+            return;
+        }
 
         try {
             const response = await fetch("http://localhost:3000/auth/profile", {

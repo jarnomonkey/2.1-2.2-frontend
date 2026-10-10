@@ -41,7 +41,14 @@
         <span aria-hidden="true" class="text-5xl">📚</span>
     </div>
 
-    <h2 class="break-words text-xl font-bold text-slate-900">{title}</h2>
+    <h2 class="break-words text-xl font-bold text-slate-900">
+        <a
+            href={`/boeken/${bookId}`}
+            class="rounded-sm hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+            {title}
+        </a>
+    </h2>
 
     <p class="mt-1 text-sm text-slate-500">{author}</p>
 

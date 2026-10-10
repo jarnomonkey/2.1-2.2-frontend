@@ -146,9 +146,21 @@ Dit project volgt de [Svelte style guide](https://svelte.dev/docs/svelte/style-g
 - Gebruik Tailwind utility classes voor styling en sluit aan bij de bestaande responsive breakpoints.
 - Gebruik duidelijke Nederlandse teksten voor de gebruikersinterface en Engelse namen voor technische identifiers.
 - Gebruik `async`/`await`, controleer responses en toon een begrijpelijke foutmelding aan de gebruiker.
+- Voer `npm run lint` uit om JavaScript, TypeScript, Svelte en Playwright-tests te controleren; gebruik `npm run lint:fix` voor automatische fixes.
 - Voeg geen secrets of `.env`-bestanden toe aan Git. Lokale environment-bestanden staan in `.gitignore`.
 
+De linting is ingericht in `eslint.config.js` met ESLint, `typescript-eslint` en `eslint-plugin-svelte`. Gegenereerde mappen zoals `.svelte-kit`, `playwright-report` en `test-results` worden niet gelint.
+
 Er is momenteel geen aparte formatterconfiguratie in de repository. Houd daarom de bestaande formatting aan: duidelijke inspringing, dubbele quotes in Svelte/TypeScript, puntkomma's en zo weinig mogelijk ongerelateerde wijzigingen in een commit.
+
+## Frontend onderbouwing
+
+- De route-structuur staat in `src/routes/`; dynamische boekdetails gebruiken `src/routes/boeken/[id]/`.
+- Herbruikbare UI staat in `src/lib/components/`, waaronder boekkaarten, leeslijsten, paginering, formulieren en laad-skeletons.
+- Lokale UI-state staat bij de route of component die deze beheert met Svelte 5-runes; afgeleide filters en paginering gebruiken `$derived`.
+- Directe toegang tot beschermde pagina's wordt gecontroleerd in de betreffende route, met login-, forbidden-, loading-, lege- en foutstates.
+- Frontendflows staan in `tests/`; Playwright test Chromium, Firefox, WebKit en mobiel Chromium. Run alle tests met `npm run test:e2e`.
+- De belangrijkste kwaliteitschecks zijn `npm run lint`, `npm run check`, `npm run build` en `npm run test:e2e`.
 
 ## Deployment
 

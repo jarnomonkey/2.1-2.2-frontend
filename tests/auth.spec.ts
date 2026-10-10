@@ -23,3 +23,9 @@ test('beveiligde pagina stuurt een bezoeker zonder login naar inloggen', async (
   await expect(page).toHaveURL(/\/login$/);
   await expect(page.getByRole('heading', { name: 'Welkom terug' })).toBeVisible();
 });
+
+test('docentpagina stuurt een bezoeker zonder login naar inloggen', async ({ page }) => {
+  await page.goto('/mijnstudenten');
+  await expect(page).toHaveURL(/\/login$/);
+  await expect(page.getByRole('heading', { name: 'Welkom terug' })).toBeVisible();
+});
