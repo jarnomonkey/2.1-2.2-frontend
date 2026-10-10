@@ -1,27 +1,76 @@
 name: Playwright Tests
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/book-api?schema=public
+      MONGODB_URI: mongodb://localhost:27017/book-api
+      SECRET: playwright-test-secret
+      PORT: 3000
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: book-api
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d book-api"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - uses: actions/checkout@v4
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with:
+          repository: jarnomonkey/2.1-2.2-backend
+          path: backend
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: backend
+      - name: Prepare backend database
+        run: npx prisma migrate deploy
+        working-directory: backend
+      - name: Seed backend books
+        run: node src/scripts/seed-books.mjs
+        working-directory: backend
+      - name: Start backend API
+        run: |
+          npm run build
+          nohup npm run start > "$RUNNER_TEMP/backend.log" 2>&1 &
+        working-directory: backend
+      - name: Wait for backend API
+        run: curl --fail --retry 20 --retry-delay 2 http://localhost:3000/docs
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
